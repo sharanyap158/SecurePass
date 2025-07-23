@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SecurePass - Next-Gen Password Generator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --primary: #6c5ce7;
+      --primary-dark: #5649c0;
+      --secondary: #00cec9;
+      --dark: #2d3436;
+      --light: #f5f6fa;
+      --danger: #d63031;
+      --success: #00b894;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--light);
+      color: var(--dark);
+      min-height: 100vh;
+      transition: background 0.3s ease;
+    }
+    
+    /* Animated Gradient Background */
+    .bg-animate {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(-45deg, #6c5ce7, #00cec9, #6c5ce7, #00cec9);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+      z-index: -2;
+    }
+    
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    /* Glass Morphism Effect */
+    .glass {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    }
+    
+    /* Navigation Bar */
+    .navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 5%;
+      z-index: 1000;
+    }
+    
+    .nav-title {
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: white;
+      display: flex;
+      align-items: center;
+    }
+    
+    .nav-title i {
+      margin-right: 10px;
+    }
+    
+    .nav-links button {
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: white;
+      margin-left: 15px;
+      padding: 8px 20px;
+      border-radius: 50px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+    
+    .nav-links button:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+    }
+    
+    /* Main Container */
+    .main-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 80px 20px 40px;
+    }
+    
+    /* Auth Container */
+    .auth-container {
+      width: 100%;
+      max-width: 450px;
+      padding: 40px;
+      margin: 20px;
+    }
+    
+    .auth-container h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: white;
+      font-size: 2rem;
+    }
+    
+    .auth-container input {
+      width: 100%;
+      padding: 15px 20px;
+      margin-bottom: 20px;
+      border: none;
+      border-radius: 50px;
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+    
+    .auth-container input::placeholder {
+      color: rgba(255, 255, 255, 0.7);
+    }
+    
+    .auth-container input:focus {
+      outline: none;
+      background: rgba(255, 255, 255, 0.3);
+    }
+    
+    .auth-container button {
+      width: 100%;
+      padding: 15px;
+      border: none;
+      border-radius: 50px;
+      background: white;
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 10px;
+    }
+    
+    .auth-container button:hover {
+      background: var(--light);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .auth-footer {
+      text-align: center;
+      margin-top: 20px;
+      color: rgba(255, 255, 255, 0.8);
+    }
+    
+    .auth-footer a {
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    
+    /* Generator Container */
+    .generator-container {
+      width: 100%;
+      max-width: 500px;
+      padding: 40px;
+      margin: 20px;
+    }
+    
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+    
+    .welcome {
+      color: white;
+      font-size: 1.2rem;
+      font-weight: 500;
+    }
+    
+    .welcome i {
+      margin-right: 10px;
+    }
+    
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    
+    .generator-title {
+      color: white;
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 1.8rem;
+    }
+    
+    .control-group {
+      margin-bottom: 25px;
+    }
+    
+    .control-group label {
+      display: block;
+      margin-bottom: 10px;
+      color: white;
+      font-weight: 500;
+    }
+    
+    .length-control {
+      display: flex;
+      align-items: center;
+    }
+    
+    .length-control input {
+      flex: 1;
+      -webkit-appearance: none;
+      height: 8px;
+      border-radius: 5px;
+      background: rgba(255, 255, 255, 0.3);
+      outline: none;
+    }
+    
+    .length-control input::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: white;
+      cursor: pointer;
+    }
+    
+    .length-value {
+      width: 50px;
+      text-align: center;
+      margin-left: 15px;
+      color: white;
+      font-weight: 600;
+    }
+    
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+    
+    .option-item {
+      display: flex;
+      align-items: center;
+    }
+    
+    .option-item input {
+      margin-right: 10px;
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+    
+    .option-item label {
+      color: white;
+      cursor: pointer;
+    }
+    
+    .generate-btn {
+      width: 100%;
+      padding: 15px;
+      border: none;
+      border-radius: 50px;
+      background: white;
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-bottom: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .generate-btn i {
+      margin-right: 10px;
+    }
+    
+    .generate-btn:hover {
+      background: var(--light);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .result-container {
+      position: relative;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    
+    .result-label {
+      display: block;
+      margin-bottom: 10px;
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.9rem;
+    }
+    
+    .result-value {
+      font-size: 1.2rem;
+      color: white;
+      word-break: break-all;
+      font-family: 'Courier New', monospace;
+    }
+    
+    .copy-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(255, 255, 255, 0.3);
+      border: none;
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .copy-btn:hover {
+      background: rgba(255, 255, 255, 0.4);
+      transform: scale(1.1);
+    }
+    
+    .strength-meter {
+      margin-top: 30px;
+    }
+    
+    .strength-label {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      color: white;
+    }
+    
+    .meter-bar {
+      height: 8px;
+      border-radius: 5px;
+      background: rgba(255, 255, 255, 0.2);
+      overflow: hidden;
+    }
+    
+    .meter-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--danger);
+      transition: all 0.3s ease;
+    }
+    
+    .hidden {
+      display: none !important;
+    }
+    
+    /* Password History */
+    .history-container {
+      margin-top: 30px;
+    }
+    
+    .history-title {
+      color: white;
+      margin-bottom: 15px;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+    }
+    
+    .history-title i {
+      margin-right: 10px;
+    }
+    
+    .history-list {
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    
+    .history-item {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 12px 15px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+    }
+    
+    .history-item-actions {
+      display: flex;
+    }
+    
+    .history-item-btn {
+      background: transparent;
+      border: none;
+      color: white;
+      margin-left: 10px;
+      cursor: pointer;
+      opacity: 0.7;
+      transition: all 0.3s ease;
+    }
+    
+    .history-item-btn:hover {
+      opacity: 1;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .navbar {
+        padding: 15px 20px;
+      }
+      
+      .auth-container, .generator-container {
+        padding: 30px;
+      }
+      
+      .options-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .fade-in {
+      animation: fadeIn 0.5s ease forwards;
+    }
+    
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 15px 25px;
+      border-radius: 50px;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      z-index: 1001;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .toast.show {
+      opacity: 1;
+    }
+    
+    .toast i {
+      margin-right: 10px;
+    }
+    
+    /* Tooltip */
+    .tooltip {
+      position: relative;
+      display: inline-block;
+    }
+    
+    .tooltip .tooltiptext {
+      visibility: hidden;
+      width: 120px;
+      background-color: #555;
+      color: #fff;
+      text-align: center;
+      border-radius: 6px;
+      padding: 5px;
+      position: absolute;
+      z-index: 1;
+      bottom: 125%;
+      left: 50%;
+      margin-left: -60px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    .tooltip .tooltiptext::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-left: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: #555 transparent transparent transparent;
+    }
+    
+    .tooltip:hover .tooltiptext {
+      visibility: visible;
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <!-- Animated Background -->
+  <div class="bg-animate"></div>
+  
+  <!-- Navigation Bar -->
+  <nav class="navbar glass">
+    <div class="nav-title">
+      <i class="fas fa-lock"></i> SecurePass
+    </div>
+    <div class="nav-links">
+      <button id="home-btn" onclick="showAuth()"><i class="fas fa-home"></i> Home</button>
+      <button id="generator-btn" onclick="showGenerator()"><i class="fas fa-key"></i> Generator</button>
+      <button id="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+    </div>
+  </nav>
+
+  <!-- Main Container -->
+  <div class="main-container">
+    <!-- Auth Container -->
+    <div class="auth-container glass fade-in" id="auth-section">
+      <h2><i class="fas fa-user-shield"></i> Welcome to SecurePass</h2>
+      
+      <div id="login-form">
+        <input type="text" id="username" placeholder="Username" required />
+        <input type="password" id="password" placeholder="Password" required />
+        <button onclick="login()"><i class="fas fa-sign-in-alt"></i> Login</button>
+        <div class="auth-footer">
+          Don't have an account? <a href="#" onclick="showRegister()">Register here</a>
+        </div>
+      </div>
+      
+      <div id="register-form" class="hidden">
+        <input type="text" id="reg-username" placeholder="Username" required />
+        <input type="password" id="reg-password" placeholder="Password" required />
+        <input type="password" id="reg-confirm" placeholder="Confirm Password" required />
+        <button onclick="register()"><i class="fas fa-user-plus"></i> Register</button>
+        <div class="auth-footer">
+          Already have an account? <a href="#" onclick="showLogin()">Login here</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Generator Container -->
+    <div class="generator-container glass hidden" id="generator-section">
+      <div class="top-bar">
+        <div class="welcome" id="welcome-user">
+          <i class="fas fa-user"></i> Guest
+        </div>
+        <div class="user-avatar tooltip" id="user-avatar" onclick="showProfileMenu()">
+          <span id="avatar-text">G</span>
+          <span class="tooltiptext">User Profile</span>
+        </div>
+      </div>
+      
+      <h2 class="generator-title"><i class="fas fa-key"></i> Password Generator</h2>
+      
+      <div class="control-group">
+        <label for="length">Password Length: <span id="length-value">12</span></label>
+        <div class="length-control">
+          <input type="range" id="length" min="4" max="50" value="12" oninput="updateLengthValue()">
+        </div>
+      </div>
+      
+      <div class="options-grid">
+        <div class="option-item">
+          <input type="checkbox" id="lowercase" checked>
+          <label for="lowercase">Lowercase (a-z)</label>
+        </div>
+        <div class="option-item">
+          <input type="checkbox" id="uppercase" checked>
+          <label for="uppercase">Uppercase (A-Z)</label>
+        </div>
+        <div class="option-item">
+          <input type="checkbox" id="numbers" checked>
+          <label for="numbers">Numbers (0-9)</label>
+        </div>
+        <div class="option-item">
+          <input type="checkbox" id="symbols" checked>
+          <label for="symbols">Symbols (!@#$)</label>
+        </div>
+      </div>
+      
+      <button class="generate-btn" onclick="generatePassword()">
+        <i class="fas fa-magic"></i> Generate Password
+      </button>
+      
+      <div class="result-container">
+        <span class="result-label">Your Secure Password:</span>
+        <div class="result-value" id="result">Click generate to create a password</div>
+        <button class="copy-btn" onclick="copyPassword()" id="copy-btn">
+          <i class="far fa-copy"></i>
+        </button>
+      </div>
+      
+      <div class="strength-meter">
+        <div class="strength-label">
+          <span>Password Strength:</span>
+          <span id="strength-text">Weak</span>
+        </div>
+        <div class="meter-bar">
+          <div class="meter-fill" id="strength-meter"></div>
+        </div>
+      </div>
+      
+      <div class="history-container">
+        <div class="history-title">
+          <i class="fas fa-history"></i> Recently Generated
+        </div>
+        <div class="history-list" id="history-list">
+          <!-- History items will be added here dynamically -->
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Toast Notification -->
+  <div class="toast" id="toast"></div>
+  
+  <script>
+    // DOM Elements
+    const authSection = document.getElementById('auth-section');
+    const generatorSection = document.getElementById('generator-section');
+    const loginForm = document.getElementById('login-form');
+    const registerForm = document.getElementById('register-form');
+    const welcomeUser = document.getElementById('welcome-user');
+    const userAvatar = document.getElementById('user-avatar');
+    const avatarText = document.getElementById('avatar-text');
+    const resultElement = document.getElementById('result');
+    const lengthInput = document.getElementById('length');
+    const lengthValue = document.getElementById('length-value');
+    const strengthText = document.getElementById('strength-text');
+    const strengthMeter = document.getElementById('strength-meter');
+    const historyList = document.getElementById('history-list');
+    const toast = document.getElementById('toast');
+    
+    // Character sets
+    const charSets = {
+      lowercase: 'abcdefghijklmnopqrstuvwxyz',
+      uppercase: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+      numbers: '0123456789',
+      symbols: '!@#$%^&*()_+-=[]{}|;:,.<>?/~`'
+    };
+    
+    // User data
+    let currentUser = null;
+    let users = JSON.parse(localStorage.getItem('users')) || {};
+    let passwordHistory = JSON.parse(localStorage.getItem('passwordHistory')) || {};
+    
+    // Initialize the app
+    window.onload = function() {
+      // Check if user is logged in
+      const loggedInUser = localStorage.getItem('currentUser');
+      if (loggedInUser) {
+        currentUser = loggedInUser;
+        showGenerator();
+        updateUserDisplay();
+        loadPasswordHistory();
+      } else {
+        showAuth();
+      }
+      
+      // Update length value display
+      updateLengthValue();
+    };
+    
+    // Auth functions
+    function showAuth() {
+      authSection.classList.remove('hidden');
+      generatorSection.classList.add('hidden');
+      showLogin();
+    }
+    
+    function showLogin() {
+      loginForm.classList.remove('hidden');
+      registerForm.classList.add('hidden');
+    }
+    
+    function showRegister() {
+      loginForm.classList.add('hidden');
+      registerForm.classList.remove('hidden');
+    }
+    
+    function login() {
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+      
+      if (!username || !password) {
+        showToast('Please enter both username and password', 'error');
+        return;
+      }
+      
+      if (users[username] && users[username].password === password) {
+        // Successful login
+        currentUser = username;
+        localStorage.setItem('currentUser', currentUser);
+        showGenerator();
+        updateUserDisplay();
+        loadPasswordHistory();
+        showToast('Login successful!', 'success');
+      } else {
+        showToast('Invalid username or password', 'error');
+      }
+    }
+    
+    function register() {
+      const username = document.getElementById('reg-username').value.trim();
+      const password = document.getElementById('reg-password').value.trim();
+      const confirm = document.getElementById('reg-confirm').value.trim();
+      
+      if (!username || !password || !confirm) {
+        showToast('Please fill in all fields', 'error');
+        return;
+      }
+      
+      if (password !== confirm) {
+        showToast('Passwords do not match', 'error');
+        return;
+      }
+      
+      if (users[username]) {
+        showToast('Username already exists', 'error');
+        return;
+      }
+      
+      if (password.length < 8) {
+        showToast('Password must be at least 8 characters', 'error');
+        return;
+      }
+      
+      // Register new user
+      users[username] = { password };
+      localStorage.setItem('users', JSON.stringify(users));
+      
+      // Initialize password history for new user
+      if (!passwordHistory[username]) {
+        passwordHistory[username] = [];
+        localStorage.setItem('passwordHistory', JSON.stringify(passwordHistory));
+      }
+      
+      showToast('Registration successful! Please login', 'success');
+      showLogin();
+      
+      // Clear register form
+      document.getElementById('reg-username').value = '';
+      document.getElementById('reg-password').value = '';
+      document.getElementById('reg-confirm').value = '';
+    }
+    
+    function logout() {
+      currentUser = null;
+      localStorage.removeItem('currentUser');
+      showAuth();
+      showToast('Logged out successfully', 'success');
+      
+      // Clear login form
+      document.getElementById('username').value = '';
+      document.getElementById('password').value = '';
+    }
+    
+    // Generator functions
+    function showGenerator() {
+      if (!currentUser) {
+        showToast('Please login first', 'error');
+        showAuth();
+        return;
+      }
+      
+      authSection.classList.add('hidden');
+      generatorSection.classList.remove('hidden');
+    }
+    
+    function updateUserDisplay() {
+      welcomeUser.innerHTML = `<i class="fas fa-user"></i> ${currentUser}`;
+      avatarText.textContent = currentUser.charAt(0).toUpperCase();
+    }
+    
+    function updateLengthValue() {
+      lengthValue.textContent = lengthInput.value;
+    }
+    
+    function generatePassword() {
+      // Get options
+      const length = parseInt(lengthInput.value);
+      const useLower = document.getElementById('lowercase').checked;
+      const useUpper = document.getElementById('uppercase').checked;
+      const useNumbers = document.getElementById('numbers').checked;
+      const useSymbols = document.getElementById('symbols').checked;
+      
+      // Validate at least one character set is selected
+      if (!useLower && !useUpper && !useNumbers && !useSymbols) {
+        showToast('Please select at least one character type', 'error');
+        return;
+      }
+      
+      // Build character pool based on selected options
+      let charPool = '';
+      if (useLower) charPool += charSets.lowercase;
+      if (useUpper) charPool += charSets.uppercase;
+      if (useNumbers) charPool += charSets.numbers;
+      if (useSymbols) charPool += charSets.symbols;
+      
+      // Generate password
+      let password = '';
+      for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * charPool.length);
+        password += charPool.charAt(randomIndex);
+      }
+      
+      // Display password
+      resultElement.textContent = password;
+      
+      // Calculate and display strength
+      const strength = calculatePasswordStrength(password);
+      updateStrengthMeter(strength);
+      
+      // Add to history
+      addToHistory(password);
+      
+      showToast('Password generated!', 'success');
+    }
+    
+    function calculatePasswordStrength(password) {
+      let strength = 0;
+      const length = password.length;
+      
+      // Length contributes up to 40% of strength
+      strength += Math.min(length / 50 * 40, 40);
+      
+      // Character variety contributes up to 60% of strength
+      let varietyScore = 0;
+      const hasLower = /[a-z]/.test(password);
+      const hasUpper = /[A-Z]/.test(password);
+      const hasNumber = /[0-9]/.test(password);
+      const hasSymbol = /[^a-zA-Z0-9]/.test(password);
+      
+      const varietyCount = [hasLower, hasUpper, hasNumber, hasSymbol].filter(Boolean).length;
+      varietyScore = (varietyCount / 4) * 60;
+      
+      strength += varietyScore;
+      
+      return Math.min(Math.round(strength), 100);
+    }
+    
+    function updateStrengthMeter(strength) {
+      strengthMeter.style.width = `${strength}%`;
+      
+      if (strength < 40) {
+        strengthText.textContent = 'Weak';
+        strengthMeter.style.backgroundColor = '#d63031'; // Red
+      } else if (strength < 70) {
+        strengthText.textContent = 'Moderate';
+        strengthMeter.style.backgroundColor = '#f39c12'; // Orange
+      } else if (strength < 90) {
+        strengthText.textContent = 'Strong';
+        strengthMeter.style.backgroundColor = '#00b894'; // Green
+      } else {
+        strengthText.textContent = 'Very Strong';
+        strengthMeter.style.backgroundColor = '#0984e3'; // Blue
+      }
+    }
+    
+    function copyPassword() {
+      const password = resultElement.textContent;
+      
+      if (!password || password === 'Click generate to create a password') {
+        showToast('No password to copy', 'error');
+        return;
+      }
+      
+      navigator.clipboard.writeText(password)
+        .then(() => {
+          showToast('Password copied to clipboard!', 'success');
+          // Change icon temporarily
+          const copyBtn = document.getElementById('copy-btn');
+          copyBtn.innerHTML = '<i class="fas fa-check"></i>';
+          setTimeout(() => {
+            copyBtn.innerHTML = '<i class="far fa-copy"></i>';
+          }, 2000);
+        })
+        .catch(err => {
+          showToast('Failed to copy password', 'error');
+          console.error('Failed to copy password: ', err);
+        });
+    }
+    
+    // Password History functions
+    function addToHistory(password) {
+      if (!currentUser || !password) return;
+      
+      // Get current history for user
+      const userHistory = passwordHistory[currentUser] || [];
+      
+      // Add new password to beginning of array
+      userHistory.unshift({
+        password,
+        timestamp: new Date().toISOString()
+      });
+      
+      // Keep only the last 10 passwords
+      if (userHistory.length > 10) {
+        userHistory.pop();
+      }
+      
+      // Update storage
+      passwordHistory[currentUser] = userHistory;
+      localStorage.setItem('passwordHistory', JSON.stringify(passwordHistory));
+      
+      // Update UI
+      loadPasswordHistory();
+    }
+    
+    function loadPasswordHistory() {
+      if (!currentUser) return;
+      
+      // Clear current list
+      historyList.innerHTML = '';
+      
+      // Get history for current user
+      const userHistory = passwordHistory[currentUser] || [];
+      
+      if (userHistory.length === 0) {
+        historyList.innerHTML = '<div class="history-item">No recent passwords</div>';
+        return;
+      }
+      
+      // Add each password to the list
+      userHistory.forEach((item, index) => {
+        const historyItem = document.createElement('div');
+        historyItem.className = 'history-item';
+        
+        const passwordText = document.createElement('span');
+        passwordText.textContent = item.password;
+        
+        const actions = document.createElement('div');
+        actions.className = 'history-item-actions';
+        
+        const copyBtn = document.createElement('button');
+        copyBtn.className = 'history-item-btn';
+        copyBtn.innerHTML = '<i class="far fa-copy"></i>';
+        copyBtn.onclick = () => {
+          navigator.clipboard.writeText(item.password)
+            .then(() => showToast('Password copied!', 'success'))
+            .catch(err => showToast('Failed to copy', 'error'));
+        };
+        
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'history-item-btn';
+        deleteBtn.innerHTML = '<i class="far fa-trash-alt"></i>';
+        deleteBtn.onclick = () => deleteHistoryItem(index);
+        
+        actions.appendChild(copyBtn);
+        actions.appendChild(deleteBtn);
+        
+        historyItem.appendChild(passwordText);
+        historyItem.appendChild(actions);
+        
+        historyList.appendChild(historyItem);
+      });
+    }
+    
+    function deleteHistoryItem(index) {
+      if (!currentUser) return;
+      
+      const userHistory = passwordHistory[currentUser] || [];
+      userHistory.splice(index, 1);
+      
+      // Update storage
+      passwordHistory[currentUser] = userHistory;
+      localStorage.setItem('passwordHistory', JSON.stringify(passwordHistory));
+      
+      // Update UI
+      loadPasswordHistory();
+      showToast('Password removed from history', 'success');
+    }
+    
+    // Profile menu functions
+    function showProfileMenu() {
+      // In a real app, this would show a dropdown menu
+      showToast(`Logged in as ${currentUser}`, 'info');
+    }
+    
+    // Toast notification
+    function showToast(message, type = 'info') {
+      const toast = document.getElementById('toast');
+      
+      // Set message and icon based on type
+      let icon = '';
+      switch (type) {
+        case 'success':
+          icon = '<i class="fas fa-check-circle"></i>';
+          break;
+        case 'error':
+          icon = '<i class="fas fa-exclamation-circle"></i>';
+          break;
+        case 'warning':
+          icon = '<i class="fas fa-exclamation-triangle"></i>';
+          break;
+        default:
+          icon = '<i class="fas fa-info-circle"></i>';
+      }
+      
+      toast.innerHTML = `${icon} ${message}`;
+      toast.classList.add('show');
+      
+      // Hide after 3 seconds
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+  </script>
+</body>
+</html>
